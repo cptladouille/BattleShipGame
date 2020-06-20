@@ -1,0 +1,11 @@
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\bin\Debug\netcoreapp3.1\BatailleNavaleApp.exe
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\bin\Debug\netcoreapp3.1\BatailleNavaleApp.deps.json
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\bin\Debug\netcoreapp3.1\BatailleNavaleApp.runtimeconfig.json
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\bin\Debug\netcoreapp3.1\BatailleNavaleApp.runtimeconfig.dev.json
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\bin\Debug\netcoreapp3.1\BatailleNavaleApp.dll
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\bin\Debug\netcoreapp3.1\BatailleNavaleApp.pdb
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\obj\Debug\netcoreapp3.1\BatailleNavaleApp.csprojAssemblyReference.cache
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\obj\Debug\netcoreapp3.1\BatailleNavaleApp.AssemblyInfoInputs.cache
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\obj\Debug\netcoreapp3.1\BatailleNavaleApp.AssemblyInfo.cs
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\obj\Debug\netcoreapp3.1\BatailleNavaleApp.dll
+C:\Users\Rémy\source\repos\BatailleNavaleApp\BatailleNavaleApp\obj\Debug\netcoreapp3.1\BatailleNavaleApp.pdb

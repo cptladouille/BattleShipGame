@@ -12,11 +12,11 @@ namespace BatailleNavaleApp.Entities
         public string Name { get; set; }
         public BoardGame PersonnalBoardGame { get; set; }
         public BoardGame EnnemyBoardGame { get; set; }
-        bool LostGame
+        public bool LostGame
         {
             get
             {
-                return Ships.All(ship => ship.IsDestroyed());
+                return Ships.All(ship => ship.IsDestroyed);
             }
         }
         public List<Ship> Ships { get; set; }
@@ -31,30 +31,112 @@ namespace BatailleNavaleApp.Entities
 
         public void ShowGameBoard()
         {
+            Console.Write(Environment.NewLine);
             Console.WriteLine(Name);
-            Console.WriteLine("Votre plateau :      | Plateau ennemi :");
-            for (int row = 1; row < 10; row++)
+            Console.WriteLine("|--|--------------------|--|---------------------|");
+            Console.WriteLine("|  |   Votre plateau :  |  |   Plateau ennemi :  |");
+            Console.WriteLine("|--|--------------------|--|---------------------|");
+            Console.WriteLine("|  |A B C D E F G H I J |  | A B C D E F G H I J |");
+            Console.WriteLine("|--|--------------------|--|---------------------|");
+            for (int row = 1; row <= PersonnalBoardGame.Length; row++)
             {
-                for (int playerCol = 1; playerCol <= 10; playerCol++)
+                if (row != 10)
+                {
+                    Console.Write("|" + row + " |");
+                }
+                else
+                {
+                    Console.Write("|" + row + "|");
+                }
+                for (int playerCol = 1; playerCol <= PersonnalBoardGame.Width; playerCol++)
                 {
                     Console.Write(PersonnalBoardGame.Cells.At(row, playerCol).OccupantDescription + " ");
                 }
-                Console.Write(" | ");
-                for (int enemyCol = 1; enemyCol <= 10; enemyCol++)
+                if (row != 10)
+                {
+                    Console.Write("|" + row + " | ");
+                }
+                else
+                {
+                    Console.Write("|" + row + "| ");
+                }
+                for (int enemyCol = 1; enemyCol <= EnnemyBoardGame.Width; enemyCol++)
                 {
                     Console.Write(EnnemyBoardGame.Cells.At(row, enemyCol).OccupantDescription + " ");
                 }
-                Console.WriteLine(Environment.NewLine);
+                Console.WriteLine("|");
+                Console.WriteLine("|--|--------------------|--|---------------------| ");
             }
             Console.WriteLine(Environment.NewLine);
+        }
+
+        public BoardCoordinates Shot()
+        {
+            Console.Write(Environment.NewLine);
+            bool shotFired = false;
+            BoardCoordinates fireCoordinates;
+            do
+            {
+                Console.WriteLine(Name + ", entrez vos coordonnées de tir");
+                fireCoordinates = GetPlayerCoordinates();
+                if (EnnemyBoardGame.Cells.At(fireCoordinates).IsAlreadyShot)
+                {
+                    Console.WriteLine("ERREUR : vous avez déja tiré ici !");
+                }else
+                {
+                    shotFired = true;
+                }
+            } while (!shotFired);
+            return fireCoordinates;
+        }
+
+        public ShipType ReactToShot(BoardCoordinates fireCoordinates)
+        {
+            var firedCell = PersonnalBoardGame.Cells.At(fireCoordinates);
+            if (!firedCell.IsOccupied)
+            {
+                Console.WriteLine("|--|--------------------|--|---------------------| ");
+                Console.WriteLine("                     Tir manqué !                 ");
+                Console.WriteLine("|--|--------------------|--|---------------------| ");
+                Console.WriteLine(Name + " n'a aucun bateau à ces coordonnées");
+                return ShipType.MISSED;
+            }
+            Ship hittedShip = this.Ships.FirstOrDefault(ship => ship.OccupedCells.Contains(firedCell));
+                Console.WriteLine("|--|--------------------|--|---------------------| ");
+                Console.WriteLine("                       Touché !                  ");
+                Console.WriteLine("|--|--------------------|--|---------------------| ");
+            hittedShip.Damages++;
+            if (hittedShip.IsDestroyed)
+            {
+                Console.WriteLine("|--|--------------------|--|---------------------| ");
+                Console.WriteLine("                       Coulé !                  ");
+                Console.WriteLine("|--|--------------------|--|---------------------| ");
+            }
+            return ShipType.HITTED;
+        }
+
+        public void ReactToShotResult(ShipType shotResult, BoardCoordinates fireCoordinates)
+        {
+            this.EnnemyBoardGame.Cells.At(fireCoordinates).CellOccupant = shotResult;
+        }
+
+        public BoardCoordinates GetPlayerCoordinates()
+        {
+            BoardCoordinates coordinates;
+            do
+            {
+                Console.Write("Entrez les coordonnées : ");
+                coordinates = BoardCoordinates.Parse(InputHandler.GetPlayerInput());
+            } while (coordinates == null);
+            return coordinates;
         }
 
         public void PlaceShips()
         {
             foreach (var playerShip in Ships)
             {
+                Console.Write(Environment.NewLine);
                 Console.WriteLine(Name + " placez votre " + playerShip.Name);
-
                 BoardCoordinates startCoordinate;
                 BoardCoordinates endCoordinate;
                 do
@@ -64,12 +146,10 @@ namespace BatailleNavaleApp.Entities
                     bool validEndCoordinate = false;
                     do
                     {
-                        do
-                        {
-                            Console.WriteLine("Saisissez les coordonnées de l'avant du bateau (ex -> A5) : ");
-                            startCoordinate = BoardCoordinates.Parse(InputHandler.GetPlayerInput());
-                        } while (startCoordinate == null);
-                        if (PersonnalBoardGame.Cells.At(startCoordinate).IsOccupied())
+                        Console.Write(Environment.NewLine);
+                        Console.WriteLine("Quelles sont les coordonnées de l'avant du " + playerShip.Name + " ? (ex -> A5)");
+                        startCoordinate = GetPlayerCoordinates();
+                        if (PersonnalBoardGame.Cells.At(startCoordinate).IsOccupied)
                         {
                             Console.WriteLine("ERREUR : La cellule " + startCoordinate.Coordinates + " est déja occupée");
                         }
@@ -78,14 +158,13 @@ namespace BatailleNavaleApp.Entities
                             validStartCoordinate = true;
                         }
                     } while (!validStartCoordinate);
+
                     do
                     {
-                        do
-                        {
-                            Console.WriteLine("Saisissez les coordonnées de l'arrière (ex -> C5) : ");
-                            endCoordinate = BoardCoordinates.Parse(InputHandler.GetPlayerInput());
-                        } while (endCoordinate == null);
-                        if (PersonnalBoardGame.Cells.At(endCoordinate).IsOccupied())
+                        Console.Write(Environment.NewLine);
+                        Console.WriteLine("Quelles sont les coordonnées de l'arrière du " + playerShip.Name + " ? (ex -> C5)");
+                        endCoordinate = GetPlayerCoordinates();
+                        if (PersonnalBoardGame.Cells.At(endCoordinate).IsOccupied)
                         {
                             Console.WriteLine("ERREUR : La cellule " + endCoordinate.Coordinates + " est déja occupée");
                         }

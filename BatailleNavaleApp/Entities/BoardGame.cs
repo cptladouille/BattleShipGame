@@ -8,8 +8,8 @@ namespace BatailleNavaleApp.Entities
 {
     public class BoardGame : IBoardGame
     {
-        private int Width = 10;
-        private int Length = 10;
+        public int Width = 10;
+        public int Length = 10;
         public List<BoardCell> Cells { get; set; }
 
 
@@ -69,15 +69,15 @@ namespace BatailleNavaleApp.Entities
 
         public bool PlaceShipAtCoordinates(Ship ship, BoardCoordinates startCoordinates, BoardCoordinates endCoordinates)
         {
-            var cellsBetweenCells = GetCellsBetween(Cells.At(startCoordinates), Cells.At(endCoordinates));
-            if (cellsBetweenCells != null)
+            var cellsBetweenCoordinates = GetCellsBetween(Cells.At(startCoordinates), Cells.At(endCoordinates));
+            if (cellsBetweenCoordinates != null)
             {
-                if (ship.Size == cellsBetweenCells.Count)
+                if (ship.Size == cellsBetweenCoordinates.Count)
                 {
                     List<BoardCell> affectedCells = new List<BoardCell>();
-                   foreach(var cell in cellsBetweenCells)
+                   foreach(var cell in cellsBetweenCoordinates)
                     {
-                        if(!cell.IsOccupied())
+                        if(!cell.IsOccupied)
                         {
                             cell.CellOccupant = ship.ShipType;
                             affectedCells.Add(cell);
@@ -94,9 +94,10 @@ namespace BatailleNavaleApp.Entities
                     }
                    if(affectedCells.Count == ship.Size)
                     {
+                        ship.OccupedCells = affectedCells;
                         return true;
                     }
-                } else if (ship.Size > cellsBetweenCells.Count)
+                } else if (ship.Size > cellsBetweenCoordinates.Count)
                 {
                     Console.WriteLine("Les coordonnées entrées sont trop courtes");
                 }else

@@ -13,14 +13,27 @@ namespace BatailleNavaleApp
         public int Size { get; set; }
         public ShipType ShipType { get; set; }
         public int Damages { get; set; }
-        public Ship() { }
+        public List<BoardCell> OccupedCells { get; set; }
+        public Ship()
+        {
+            this.OccupedCells = new List<BoardCell>();
+        }
+
+        public Ship(List<BoardCell> cells)
+        {
+            this.OccupedCells = cells;
+        }
+
         public void PromptSize()
         {
             Console.WriteLine("Le " + Name + " mesure " + Size + " cellules de longueur");
         }
-        public bool IsDestroyed()
+        public bool IsDestroyed
         {
-            return Damages >= Size;         
+            get
+            {
+                return Damages >= Size;
+            }
         }
     }
 

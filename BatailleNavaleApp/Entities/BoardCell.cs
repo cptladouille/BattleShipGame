@@ -25,19 +25,31 @@ namespace BatailleNavaleApp.Entities
             }
         }
 
-        public bool IsOccupied()
-        {                
-            return CellOccupant == ShipType.AICRAFT_CARRIER
-                || CellOccupant == ShipType.COUNTER_TORPEDO
-                || CellOccupant == ShipType.CRUISER
-                || CellOccupant == ShipType.TORPEDO_BOAT;
-
+        public bool IsOccupied
+        {
+            get
+            {
+                return CellOccupant == ShipType.AICRAFT_CARRIER
+                    || CellOccupant == ShipType.COUNTER_TORPEDO
+                    || CellOccupant == ShipType.CRUISER
+                    || CellOccupant == ShipType.TORPEDO_BOAT;
+            }
         }
+
+        public bool IsAlreadyShot
+        {
+            get
+            {
+                return CellOccupant == ShipType.HITTED
+                    || CellOccupant == ShipType.MISSED;
+            }
+        }
+
 
         public bool IsParallelWith(BoardCell cell)
         {
             return (cell.BoardCoordinates.x == this.BoardCoordinates.x
-                || cell.BoardCoordinates.y == this.BoardCoordinates.y) ;
+                || cell.BoardCoordinates.y == this.BoardCoordinates.y);
         }
     }
 }

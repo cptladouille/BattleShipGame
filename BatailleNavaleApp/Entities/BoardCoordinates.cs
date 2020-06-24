@@ -35,20 +35,20 @@ namespace BatailleNavaleApp.Entities
                 var letter = input.Substring(0, 1).ToUpper();
                 if (columnNames.Contains(letter))
                 {
-                    bool parseSuccess;
-                    int rowNumber;
+                    bool parseSuccess = false;
+                    int rowNumber = 0;
                     if (input.Length == 2)
                     {
                         parseSuccess = int.TryParse(input.Substring(1, 1), out rowNumber);
                     }
-                    else
+                    else if (input.Length == 3)
                     {
                         parseSuccess = int.TryParse(input.Substring(1, 2), out rowNumber);
                     }
                     if(parseSuccess){
                         if (rowNumber >= 1 && rowNumber <= 10)
                         {
-                            return new BoardCoordinates(columnNames.IndexOf(letter) + 1, rowNumber);
+                            return new BoardCoordinates(rowNumber, columnNames.IndexOf(letter) + 1);
                         }
                         Console.WriteLine("Veuillez entrer un numéro de ligne comprise entre 1 et 10");
                     }

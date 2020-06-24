@@ -12,6 +12,7 @@ namespace BatailleNavaleApp.Entities
         public string Name { get; set; }
         public BoardGame PersonnalBoardGame { get; set; }
         public BoardGame EnnemyBoardGame { get; set; }
+
         public bool LostGame
         {
             get
@@ -24,8 +25,25 @@ namespace BatailleNavaleApp.Entities
         public Player(string name)
         {
             this.Name = name;
-            this.PersonnalBoardGame = new BoardGame();
-            this.EnnemyBoardGame = new BoardGame();
+        }
+        public bool IsShipPlacementOk()
+        {
+            string input;
+            do
+            {
+                Console.Write(Name + " êtes vous satisfait de votre placement ? y/n : ");
+                input = InputHandler.GetPlayerInput();
+            } while (input != "y" && input != "n");
+            return input == "y";
+
+        }
+
+        public void ResetGameBoards()
+        {
+            PersonnalBoardGame = new BoardGame();
+            PersonnalBoardGame.InitBoardGame();
+            EnnemyBoardGame = new BoardGame();
+            EnnemyBoardGame.InitBoardGame();
         }
 
         public void ShowGameBoard()
@@ -81,7 +99,8 @@ namespace BatailleNavaleApp.Entities
                 if (EnnemyBoardGame.Cells.At(fireCoordinates).IsAlreadyShot)
                 {
                     Console.WriteLine("ERREUR : vous avez déja tiré ici !");
-                }else
+                }
+                else
                 {
                     shotFired = true;
                 }
@@ -101,9 +120,9 @@ namespace BatailleNavaleApp.Entities
                 return ShipType.MISSED;
             }
             Ship hittedShip = this.Ships.FirstOrDefault(ship => ship.OccupedCells.Contains(firedCell));
-                Console.WriteLine("|--|--------------------|--|---------------------| ");
-                Console.WriteLine("                       Touché !                  ");
-                Console.WriteLine("|--|--------------------|--|---------------------| ");
+            Console.WriteLine("|--|--------------------|--|---------------------| ");
+            Console.WriteLine("                       Touché !                  ");
+            Console.WriteLine("|--|--------------------|--|---------------------| ");
             hittedShip.Damages++;
             if (hittedShip.IsDestroyed)
             {

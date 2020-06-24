@@ -10,8 +10,7 @@ namespace BatailleNavaleApp.Entities
         public int Length = 10;
         public List<BoardCell> Cells { get; set; }
 
-
-        public BoardGame()
+        public void InitBoardGame()
         {
             this.Cells = new List<BoardCell>();
             for (int column = 1; column <= Width; column++)
@@ -21,6 +20,7 @@ namespace BatailleNavaleApp.Entities
                     Cells.Add(new BoardCell() { BoardCoordinates = new BoardCoordinates(column, rows)});
                 }
             }
+
         }
 
         public List<BoardCell> GetCellsBetween(BoardCell startCell, BoardCell endCell)
@@ -105,5 +105,7 @@ namespace BatailleNavaleApp.Entities
             }
             return false;
         }
+
+
     }
 }

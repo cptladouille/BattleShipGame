@@ -5,8 +5,10 @@ namespace BatailleNavaleApp
     {
         static void Main(string[] args)
         {
-            var gameMenu = new BattleShipGameMenu();
-            gameMenu.InitGame();
+
+            var game = new GameLoop();
+            game.InitGame();
         }
+
     }
 }

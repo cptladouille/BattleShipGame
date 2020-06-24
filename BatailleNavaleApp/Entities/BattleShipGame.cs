@@ -1,30 +1,22 @@
-﻿using BatailleNavaleApp.Entities;
-using BatailleNavaleApp.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using BatailleNavaleApp.Handlers;
-namespace BatailleNavaleApp
+using BatailleNavaleApp.Factories;
+using System.Collections.Generic;
+
+namespace BatailleNavaleApp.Entities
 {
-    public class BattleShipGame
+    public class BattleShipGame : BaseEntity
     {
-        Player Player1 { get; set; }
-        Player Player2 { get; set; }
-        private IShipFactory _shipFactory { get; set; }
 
-
-        public BattleShipGame(IShipFactory shipFactory)
-        {
-            this._shipFactory = shipFactory;
-        }
-
+        public Player Player1 { get; set; }
+        public Player Player2 { get; set; }
 
         public void SetupGame()
         {
             Console.Write("Joueur 1 : Saisissez votre nom : ");
-            Player1 = new Player(InputHandler.GetPlayerInput(), _shipFactory.InitPlayerShips());
+            Player1 = new Player(InputHandler.GetPlayerInput()) { Ships = InitPlayerShips() };
             Console.Write("Joueur 2 : Saisissez votre nom : ");
-            Player2 = new Player(InputHandler.GetPlayerInput(), _shipFactory.InitPlayerShips());
+            Player2 =new Player(InputHandler.GetPlayerInput()) { Ships = InitPlayerShips() };
             string input;
             do
             {
@@ -48,7 +40,10 @@ namespace BatailleNavaleApp
                 } while (input != "y" && input != "n");
 
             } while (input != "y");
+            Console.WriteLine("La partie commence !");
         }
+
+        
 
 
         public void PlayRound()
@@ -67,23 +62,22 @@ namespace BatailleNavaleApp
             Console.WriteLine(Environment.NewLine);
         }
 
-        public void PlayGame()
+        
+        public List<Ship> InitPlayerShips()
         {
-            SetupGame();
-            Console.WriteLine("La partie commence !");
-
-            while (!Player1.LostGame && !Player2.LostGame)
+            ShipFactory cruiserFactory = new CruiserFactory();
+            ShipFactory aircraftCarrierFactory = new AircraftCarrierFactory();
+            ShipFactory torpedoBoatFactory = new TorpedoBoatFactory();
+            ShipFactory counterTorpedoFactory = new TorpedoBoatFactory();
+            List<Ship> ships = new List<Ship>()
             {
-                PlayRound();
-            }
-            if (Player1.LostGame)
-            {
-                Console.WriteLine(Player2.Name + " a gagné la partie, BRAVO !");
-            }
-            else
-            {
-                Console.WriteLine(Player1.Name + " a gagné la partie, BRAVO !");
-            }
+                cruiserFactory.GetShip(),
+                counterTorpedoFactory.GetShip(),
+                counterTorpedoFactory.GetShip(),
+                aircraftCarrierFactory.GetShip(),
+                torpedoBoatFactory.GetShip()
+            };
+            return ships;
         }
     }
 }

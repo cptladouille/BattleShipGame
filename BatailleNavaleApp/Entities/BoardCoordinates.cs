@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BatailleNavaleApp.Entities
 {
-    public class BoardCoordinates
+    public class BoardCoordinates : BaseEntity
     {
         public static readonly List<string> columnNames = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
         public int x { get; set; }

@@ -1,13 +1,11 @@
-﻿using BatailleNavaleApp.Extensions;
-using BatailleNavaleApp.Interfaces;
+﻿using BatailleNavaleApp.Enums;
+using BatailleNavaleApp.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BatailleNavaleApp.Entities
 {
-    public class BoardGame : IBoardGame
-    {
+    public class BoardGame : BaseEntity {
         public int Width = 10;
         public int Length = 10;
         public List<BoardCell> Cells { get; set; }
@@ -20,7 +18,7 @@ namespace BatailleNavaleApp.Entities
             {
                 for (int rows = 1; rows <= Length; rows++)
                 {
-                    Cells.Add(new BoardCell(column, rows));
+                    Cells.Add(new BoardCell() { BoardCoordinates = new BoardCoordinates(column, rows)});
                 }
             }
         }

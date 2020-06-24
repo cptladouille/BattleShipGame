@@ -1,13 +1,13 @@
-﻿using BatailleNavaleApp.Extensions;
+﻿using BatailleNavaleApp.Enums;
+using BatailleNavaleApp.Extensions;
 using BatailleNavaleApp.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BatailleNavaleApp.Entities
 {
-    public class Player
+    public class Player : BaseEntity
     {
         public string Name { get; set; }
         public BoardGame PersonnalBoardGame { get; set; }
@@ -21,10 +21,9 @@ namespace BatailleNavaleApp.Entities
         }
         public List<Ship> Ships { get; set; }
 
-        public Player(string name, List<Ship> ships)
+        public Player(string name)
         {
             this.Name = name;
-            this.Ships = ships;
             this.PersonnalBoardGame = new BoardGame();
             this.EnnemyBoardGame = new BoardGame();
         }

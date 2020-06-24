@@ -1,19 +1,16 @@
-﻿using BatailleNavaleApp.Extensions;
-using System;
-using System.Collections.Generic;
+﻿using BatailleNavaleApp.Enums;
+using BatailleNavaleApp.Extensions;
 using System.ComponentModel;
-using System.Text;
 
 
 namespace BatailleNavaleApp.Entities
 {
-    public class BoardCell
+    public class BoardCell : BaseEntity
     {
         public BoardCoordinates BoardCoordinates { get; set; }
         public ShipType CellOccupant { get; set; }
-        public BoardCell(int x, int y)
+        public BoardCell()
         {
-            this.BoardCoordinates = new BoardCoordinates(x, y);
             this.CellOccupant = ShipType.NONE;
         }
 

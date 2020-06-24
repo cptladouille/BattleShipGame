@@ -1,7 +1,4 @@
-﻿using BatailleNavaleApp.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace BatailleNavaleApp.Handlers
 {
@@ -9,7 +6,7 @@ namespace BatailleNavaleApp.Handlers
     {
         public static string GetPlayerInput()
         {
-                string input = Console.ReadLine();
+            string input = Console.ReadLine();
             while (string.IsNullOrWhiteSpace(input))
             {
                 Console.Write("Saisie incorrecte, Veuillez recommencer : ");

@@ -4,6 +4,7 @@ using BatailleNavaleApp.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace BatailleNavaleApp.Entities
 {
@@ -21,10 +22,19 @@ namespace BatailleNavaleApp.Entities
             }
         }
         public List<Ship> Ships { get; set; }
+        public Player()
+        {
+            Ships = new List<Ship>();
+            ResetGameBoards();
+        }
+
 
         public Player(string name)
         {
+
+            Ships = new List<Ship>();
             this.Name = name;
+            ResetGameBoards();
         }
         public bool IsShipPlacementOk()
         {
@@ -46,65 +56,88 @@ namespace BatailleNavaleApp.Entities
             EnnemyBoardGame.InitBoardGame();
         }
 
-        public void ShowGameBoard()
+        public void SetupPlayer()
         {
-            Console.Write(Environment.NewLine);
-            Console.WriteLine(Name);
-            Console.WriteLine("|--|--------------------|--|---------------------|");
-            Console.WriteLine("|  |   Votre plateau :  |  |   Plateau ennemi :  |");
-            Console.WriteLine("|--|--------------------|--|---------------------|");
-            Console.WriteLine("|  |A B C D E F G H I J |  | A B C D E F G H I J |");
-            Console.WriteLine("|--|--------------------|--|---------------------|");
+            foreach (var playerShip in Ships)
+            {
+                bool isShipPlaced;
+                do
+                {
+                    Console.Write(Environment.NewLine);
+                    Console.WriteLine(Name + " placez votre " + playerShip.Name);
+                    Console.WriteLine(playerShip.GetSizeToShow());
+                    BoardCoordinates bc1, bc2;
+                    do
+                    {
+                        Console.WriteLine("Quelles sont les coordonnées de l'avant du " + playerShip.Name + " ? (ex -> A5)");
+                        bc1 = BoardCoordinates.Parse(InputHandler.GetPlayerInput());
+                    } while (bc1 == null);
+                    Console.Write(Environment.NewLine);
+                    do
+                    {
+                        Console.WriteLine("Quelles sont les coordonnées de l'arrière du " + playerShip.Name + " ? (ex -> C5)");
+                        bc2 = BoardCoordinates.Parse(InputHandler.GetPlayerInput());
+                    } while (bc2 == null); 
+                    isShipPlaced = PlaceShip(playerShip, bc1, bc2);
+                }
+                while (!isShipPlaced);
+            }
+            Console.WriteLine(BuildGameBoard());
+        }
+
+
+        public string BuildGameBoard()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(Environment.NewLine);
+            sb.AppendLine(Name);
+            sb.AppendLine("|--|--------------------|--|---------------------|");
+            sb.AppendLine("|  |   Votre plateau :  |  |   Plateau ennemi :  |");
+            sb.AppendLine("|--|--------------------|--|---------------------|");
+            sb.AppendLine("|  |A B C D E F G H I J |  | A B C D E F G H I J |");
+            sb.AppendLine("|--|--------------------|--|---------------------|");
             for (int row = 1; row <= PersonnalBoardGame.Length; row++)
             {
                 if (row != 10)
                 {
-                    Console.Write("|" + row + " |");
+                    sb.Append("|" + row + " |");
                 }
                 else
                 {
-                    Console.Write("|" + row + "|");
+                    sb.Append("|" + row + "|");
                 }
                 for (int playerCol = 1; playerCol <= PersonnalBoardGame.Width; playerCol++)
                 {
-                    Console.Write(PersonnalBoardGame.Cells.At(row, playerCol).OccupantDescription + " ");
+                    sb.Append(PersonnalBoardGame.Cells.At(playerCol, row).OccupantDescription + " ");
                 }
                 if (row != 10)
                 {
-                    Console.Write("|" + row + " | ");
+                    sb.Append("|" + row + " | ");
                 }
                 else
                 {
-                    Console.Write("|" + row + "| ");
+                    sb.Append("|" + row + "| ");
                 }
                 for (int enemyCol = 1; enemyCol <= EnnemyBoardGame.Width; enemyCol++)
                 {
-                    Console.Write(EnnemyBoardGame.Cells.At(row, enemyCol).OccupantDescription + " ");
+                    sb.Append(EnnemyBoardGame.Cells.At(enemyCol, row).OccupantDescription + " ");
                 }
-                Console.WriteLine("|");
-                Console.WriteLine("|--|--------------------|--|---------------------| ");
+                sb.AppendLine("|");
+                sb.AppendLine("|--|--------------------|--|---------------------| ");
             }
-            Console.WriteLine(Environment.NewLine);
+           sb.AppendLine(Environment.NewLine);
+            return sb.ToString();
         }
 
-        public BoardCoordinates Shot()
+        public BoardCoordinates CheckFireCoordinates(BoardCoordinates fireCoordinates)
         {
-            Console.Write(Environment.NewLine);
-            bool shotFired = false;
-            BoardCoordinates fireCoordinates;
-            do
+            if (EnnemyBoardGame.Cells.At(fireCoordinates).IsAlreadyShot)
             {
-                Console.WriteLine(Name + ", entrez vos coordonnées de tir");
-                fireCoordinates = GetPlayerCoordinates();
-                if (EnnemyBoardGame.Cells.At(fireCoordinates).IsAlreadyShot)
-                {
-                    Console.WriteLine("ERREUR : vous avez déja tiré ici !");
-                }
-                else
-                {
-                    shotFired = true;
-                }
-            } while (!shotFired);
+                Console.WriteLine(Environment.NewLine);
+                Console.WriteLine("ERREUR : vous avez déja tiré ici !");
+                return null;
+            }
+            Console.WriteLine(Environment.NewLine);
             return fireCoordinates;
         }
 
@@ -130,73 +163,34 @@ namespace BatailleNavaleApp.Entities
                 Console.WriteLine("                       Coulé !                  ");
                 Console.WriteLine("|--|--------------------|--|---------------------| ");
             }
+            Console.WriteLine(Environment.NewLine);
             return ShipType.HITTED;
         }
 
-        public void ReactToShotResult(ShipType shotResult, BoardCoordinates fireCoordinates)
+        public void UpdateBoardWithShotResult(ShipType shotResult, BoardCoordinates fireCoordinates)
         {
             this.EnnemyBoardGame.Cells.At(fireCoordinates).CellOccupant = shotResult;
         }
 
-        public BoardCoordinates GetPlayerCoordinates()
+        public bool PlaceShip(Ship playerShip, BoardCoordinates startCoordinate, BoardCoordinates endCoordinate)
         {
-            BoardCoordinates coordinates;
-            do
+            Console.Write(Environment.NewLine);
+            if (!PersonnalBoardGame.Cells.At(startCoordinate).IsOccupied)
             {
-                Console.Write("Entrez les coordonnées : ");
-                coordinates = BoardCoordinates.Parse(InputHandler.GetPlayerInput());
-            } while (coordinates == null);
-            return coordinates;
-        }
-
-        public void PlaceShips()
-        {
-            foreach (var playerShip in Ships)
-            {
-                Console.Write(Environment.NewLine);
-                Console.WriteLine(Name + " placez votre " + playerShip.Name);
-                BoardCoordinates startCoordinate;
-                BoardCoordinates endCoordinate;
-                do
+                if (!PersonnalBoardGame.Cells.At(endCoordinate).IsOccupied)
                 {
-                    playerShip.PromptSize();
-                    bool validStartCoordinate = false;
-                    bool validEndCoordinate = false;
-                    do
-                    {
-                        Console.Write(Environment.NewLine);
-                        Console.WriteLine("Quelles sont les coordonnées de l'avant du " + playerShip.Name + " ? (ex -> A5)");
-                        startCoordinate = GetPlayerCoordinates();
-                        if (PersonnalBoardGame.Cells.At(startCoordinate).IsOccupied)
-                        {
-                            Console.WriteLine("ERREUR : La cellule " + startCoordinate.Coordinates + " est déja occupée");
-                        }
-                        else
-                        {
-                            validStartCoordinate = true;
-                        }
-                    } while (!validStartCoordinate);
-
-                    do
-                    {
-                        Console.Write(Environment.NewLine);
-                        Console.WriteLine("Quelles sont les coordonnées de l'arrière du " + playerShip.Name + " ? (ex -> C5)");
-                        endCoordinate = GetPlayerCoordinates();
-                        if (PersonnalBoardGame.Cells.At(endCoordinate).IsOccupied)
-                        {
-                            Console.WriteLine("ERREUR : La cellule " + endCoordinate.Coordinates + " est déja occupée");
-                        }
-                        else
-                        {
-                            validEndCoordinate = true;
-                        }
-
-                    } while (!validEndCoordinate);
+                    return PersonnalBoardGame.PlaceShipAtCoordinates(playerShip, startCoordinate, endCoordinate);
                 }
-                while (!PersonnalBoardGame.PlaceShipAtCoordinates(playerShip, startCoordinate, endCoordinate));
+                else
+                {
+                    Console.WriteLine("ERREUR : La cellule " + startCoordinate.Coordinates + " est déja occupée");
+                }
             }
+            else
+            {
+                Console.WriteLine("ERREUR : La cellule " + endCoordinate.Coordinates + " est déja occupée");
+            }
+            return false;
         }
-
-
     }
 }

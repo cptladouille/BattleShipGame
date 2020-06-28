@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 namespace BatailleNavaleApp.Factories
 {
     public abstract class ShipFactory

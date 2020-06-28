@@ -1,7 +1,7 @@
 ﻿using BatailleNavaleApp.Entities;
 using BatailleNavaleApp.Enums;
-using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace BatailleNavaleApp
 {
@@ -16,9 +16,11 @@ namespace BatailleNavaleApp
             this.OccupedCells = new List<BoardCell>();
         }
 
-        public void PromptSize()
+        public string GetSizeToShow()
         {
-            Console.WriteLine("Le " + Name + " mesure " + Size + " cellules de longueur");
+            var sb = new StringBuilder();
+            sb.AppendLine("Le " + Name + " mesure " + Size + " cellules de longueur");
+            return sb.ToString();
         }
         public bool IsDestroyed
         {

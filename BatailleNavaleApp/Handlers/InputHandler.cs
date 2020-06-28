@@ -6,9 +6,8 @@ namespace BatailleNavaleApp.Handlers
 {
     public static class InputHandler
     {
-        private static readonly List<ConsoleKey> PauseKeys = new List<ConsoleKey>() { ConsoleKey.Enter, ConsoleKey.S, QuitKey };
-        private static readonly ConsoleKey QuitKey = ConsoleKey.Escape;
-        private static readonly List<ConsoleKey> MainMenuKeys = new List<ConsoleKey>() { ConsoleKey.Enter, ConsoleKey.C, QuitKey };
+        private static readonly List<ConsoleKey> PauseKeys = new List<ConsoleKey>() { ConsoleKey.Enter, ConsoleKey.S, ConsoleKey.Escape };
+        private static readonly List<ConsoleKey> MainMenuKeys = new List<ConsoleKey>() { ConsoleKey.Enter, ConsoleKey.C, ConsoleKey.Escape,ConsoleKey.D };
         public static string GetPlayerInput()
         {
             string input = Console.ReadLine();
@@ -25,7 +24,6 @@ namespace BatailleNavaleApp.Handlers
         {
             int inputNumber;
             do {
-                Console.WriteLine("Saisissez un nombre");
                 var input = GetPlayerInput();
                 int.TryParse(input, out inputNumber);
             }

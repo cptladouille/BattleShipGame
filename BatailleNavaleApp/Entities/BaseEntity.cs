@@ -6,8 +6,7 @@ namespace BatailleNavaleApp.Entities
 {
     public class BaseEntity
     {
-       [Key]
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+       [Required,Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
        public  Guid Id { get; set; }
 
     }

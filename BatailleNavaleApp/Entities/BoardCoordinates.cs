@@ -18,6 +18,9 @@ namespace BatailleNavaleApp.Entities
             this.x = x;
             this.y = y;
         }
+        public BoardCoordinates()
+        {
+        }
 
         public string Coordinates
         {
@@ -30,7 +33,7 @@ namespace BatailleNavaleApp.Entities
         public static BoardCoordinates Parse(string input)
         {
 
-            if (input.Length >= 2 || input.Length <= 3)
+            if (input.Length >= 2 && input.Length <= 3)
             {
                 var letter = input.Substring(0, 1).ToUpper();
                 if (columnNames.Contains(letter))
@@ -45,10 +48,11 @@ namespace BatailleNavaleApp.Entities
                     {
                         parseSuccess = int.TryParse(input.Substring(1, 2), out rowNumber);
                     }
-                    if(parseSuccess){
+                    if (parseSuccess)
+                    {
                         if (rowNumber >= 1 && rowNumber <= 10)
                         {
-                            return new BoardCoordinates(rowNumber, columnNames.IndexOf(letter) + 1);
+                            return new BoardCoordinates(columnNames.IndexOf(letter) + 1, rowNumber);
                         }
                         Console.WriteLine("Veuillez entrer un numéro de ligne comprise entre 1 et 10");
                     }
@@ -59,7 +63,7 @@ namespace BatailleNavaleApp.Entities
                 return null;
             }
             Console.WriteLine("Coordonnées incorrectes, entrez sous la forme : ");
-            Console.WriteLine("[LETTRE_COLONNE]+[NUMERO_LIGNE] - > ex : E5");
+            Console.WriteLine("[LETTRE_LIGNE]+[NUMERO_LIGNE] - > ex : E5");
             return null;
         }
 

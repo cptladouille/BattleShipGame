@@ -1,42 +1,41 @@
-﻿using BatailleNavaleApp.Contexts;
-using BatailleNavaleApp.Entities;
-using BatailleNavaleApp.Handlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Text;
 
 namespace BatailleNavaleApp
 {
     public class BattleShipGameMenu
     {
-        public static void ShowMainMenu()
+        public static string GetMainMenu()
         {
-            Console.WriteLine(Environment.NewLine);
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("BIENVENUE DANS UN JEU DE BATAILLE NAVALE QUELCONQUE");
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("--------------- Auteur : Mouttet Rémy -------------");
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("----------------- MENU PRINCIPAL ------------------");
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("---------------- enter : Nouvelle partie ----------");
-            Console.WriteLine("-------------------- C : Charger une partie -------");
-            Console.WriteLine("---------------- echap : Quitter ------------------");
-            Console.WriteLine("---------------------------------------------------");
+            var sb = new StringBuilder();
+            sb.AppendLine(Environment.NewLine);
+            sb.AppendLine("---------------------------------------------------");
+            sb.AppendLine("BIENVENUE DANS UN JEU DE BATAILLE NAVALE QUELCONQUE");
+            sb.AppendLine("---------------------------------------------------");
+            sb.AppendLine("--------------- Auteur : Mouttet Rémy -------------");
+            sb.AppendLine("---------------------------------------------------");
+            sb.AppendLine("----------------- MENU PRINCIPAL ------------------");
+            sb.AppendLine("---------------------------------------------------");
+            sb.AppendLine("---------------- enter : Nouvelle partie ----------");
+            sb.AppendLine("-------------------- C : Charger une partie -------");
+            sb.AppendLine("-------------------- D : Supprimer une partie -----");
+            sb.AppendLine("---------------- echap : Quitter ------------------");
+            sb.AppendLine("---------------------------------------------------");
+            return sb.ToString();
         }
-        public static void ShowPauseMenu()
+        public static string  GetPauseMenu()
         {
-            Console.WriteLine(Environment.NewLine);
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("------------------- JEU EN PAUSE ------------------");
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("------------------ MENU DE PAUSE ------------------");
-            Console.WriteLine("---------------------------------------------------");
-            Console.WriteLine("--------------- entrer : Continuer ----------------");
-            Console.WriteLine("-------------------- S : Sauvegarder --------------");
-            Console.WriteLine("---------------- echap : Quitter ------------------");
-            Console.WriteLine("---------------------------------------------------");
+            var sb = new StringBuilder();
+            sb.AppendLine("---------------------------------------------------");
+            sb.AppendLine("------------------- JEU EN PAUSE ------------------");
+            sb.AppendLine("---------------------------------------------------");
+            sb.AppendLine("------------------ MENU DE PAUSE ------------------");
+            sb.AppendLine("---------------------------------------------------");
+            sb.AppendLine("--------------- entrer : Continuer ----------------");
+            sb.AppendLine("-------------------- S : Sauvegarder --------------");
+            sb.AppendLine("---------------- echap : Quitter ------------------");
+            sb.AppendLine("---------------------------------------------------");
+            return sb.ToString();
         }
     }
 }

@@ -3,9 +3,7 @@ using BatailleNavaleApp.Entities;
 using BatailleNavaleApp.Enums;
 using BatailleNavaleApp.Handlers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BatailleNavaleApp
 {
@@ -24,7 +22,7 @@ namespace BatailleNavaleApp
             BattleShipGame battleShipGame = null;
             do
             {
-                BattleShipGameMenu.ShowMainMenu();
+                Console.WriteLine(BattleShipGameMenu.GetMainMenu());
                 var input = InputHandler.GetMenuInput(MenuType.MAIN);
                 Console.WriteLine(Environment.NewLine);
                 if (input == ConsoleKey.Enter)
@@ -34,7 +32,11 @@ namespace BatailleNavaleApp
                 }
                 else if (input == ConsoleKey.C)
                 {
-                    battleShipGame = GetGame();
+                    battleShipGame = ProcessMenuChoice(input);
+                }
+                else if (input == ConsoleKey.D)
+                {
+                    battleShipGame = ProcessMenuChoice(input);
                 }
                 else
                 {
@@ -63,11 +65,13 @@ namespace BatailleNavaleApp
             if (bsg.Player1.LostGame)
             {
                 Console.WriteLine(bsg.Player2.Name + " a gagné la partie, BRAVO !");
+                InitGame();
             }
             else if (bsg.Player2.LostGame)
 
             {
                 Console.WriteLine(bsg.Player1.Name + " a gagné la partie, BRAVO !");
+                InitGame();
             }
             PauseGame();
         }
@@ -76,19 +80,28 @@ namespace BatailleNavaleApp
         /// </summary>
         public void PauseGame()
         {
-            BattleShipGameMenu.ShowPauseMenu();
+            Console.WriteLine(BattleShipGameMenu.GetPauseMenu());
             var input = InputHandler.GetMenuInput(MenuType.PAUSE);
             if (input == ConsoleKey.Enter)
             {
+                IsGamePaused = false;
                 PlayGame();
             }
             else if (input == ConsoleKey.S)
             {
-                dataMapper.SaveGame(bsg);
+                if (bsg.Id != Guid.Empty)
+                {
+                    dataMapper.UpdateGame(bsg);
+                }
+                else
+                {
+                    dataMapper.SaveGame(bsg);
+                }
+                PauseGame();
             }
-            else
+            else if (input == ConsoleKey.Escape)
             {
-                Environment.Exit(0);
+                InitGame();
             }
             Console.WriteLine(Environment.NewLine);
         }
@@ -97,7 +110,7 @@ namespace BatailleNavaleApp
         /// Affiche les parties sauvgardées et charge celle selectionnée
         /// </summary>
         /// <returns></returns>
-        public BattleShipGame GetGame()
+        public BattleShipGame ProcessMenuChoice(ConsoleKey enteredKey)
         {
             BattleShipGame loadedGame = null;
             var savedGames = dataMapper.GetSavedGamesWithPlayers();
@@ -106,13 +119,29 @@ namespace BatailleNavaleApp
                 Console.WriteLine("Des parties sauvgardées ont étés trouvées :");
                 foreach (var game in savedGames)
                 {
-                    Console.WriteLine("Partie " + (savedGames.IndexOf(game) + 1)+ " "+game.Player1.Name +" vs "+game.Player2.Name);
+                    Console.WriteLine("Partie " + (savedGames.IndexOf(game) + 1) + " " + game.Player1.Name + " vs " + game.Player2.Name);
                 }
-                Console.WriteLine("Saisissez le numéro de la partie à charger ou 0 pour en lancer une nouvelle");
-                var gameNumber = InputHandler.GetLoadGameInput();
-                if (gameNumber <= savedGames.Count() && gameNumber >= 1)
+                Console.WriteLine(Environment.NewLine);
+                if (enteredKey == ConsoleKey.C)
                 {
-                    loadedGame = dataMapper.LoadGame(savedGames[gameNumber-1].Id);
+                    Console.WriteLine("Saisissez le numéro de la partie à charger ou 0 pour revenir au menu principal");
+                    var gameNumber = InputHandler.GetLoadGameInput();
+                    if (gameNumber <= savedGames.Count() && gameNumber >= 1)
+                    {
+                        loadedGame = dataMapper.LoadGame(savedGames[gameNumber - 1].Id);
+                    }
+                }
+                if (enteredKey == ConsoleKey.D)
+                {
+                    Console.WriteLine("Saisissez le numéro de la partie à supprimer ou 0 pour revenir au menu principal");
+                    var gameNumber = InputHandler.GetLoadGameInput();
+                    if (gameNumber <= savedGames.Count() && gameNumber >= 1)
+                    {
+                        if (dataMapper.DeleteGame(savedGames[gameNumber - 1]))
+                        {
+                            Console.WriteLine("Partie Supprimée avec succès !");
+                        }
+                    }
                 }
             }
             Console.WriteLine(Environment.NewLine);
@@ -120,4 +149,3 @@ namespace BatailleNavaleApp
         }
     }
 }
-

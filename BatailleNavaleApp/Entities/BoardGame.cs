@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 namespace BatailleNavaleApp.Entities
 {
-    public class BoardGame : BaseEntity {
+    public class BoardGame : BaseEntity
+    {
         public int Width = 10;
         public int Length = 10;
         public List<BoardCell> Cells { get; set; }
@@ -17,7 +18,7 @@ namespace BatailleNavaleApp.Entities
             {
                 for (int rows = 1; rows <= Length; rows++)
                 {
-                    Cells.Add(new BoardCell() { BoardCoordinates = new BoardCoordinates(column, rows)});
+                    Cells.Add(new BoardCell() { BoardCoordinates = new BoardCoordinates(column, rows) });
                 }
             }
 
@@ -27,7 +28,7 @@ namespace BatailleNavaleApp.Entities
         {
             if (startCell.IsParallelWith(endCell))
             {
-                List<BoardCell> cells = new List<BoardCell>() {};
+                List<BoardCell> cells = new List<BoardCell>() { };
                 if (startCell.BoardCoordinates.x == endCell.BoardCoordinates.x)//If columns are the same
                 {
                     if (startCell.BoardCoordinates.y < endCell.BoardCoordinates.y) //ex: A1 -> C1
@@ -36,32 +37,37 @@ namespace BatailleNavaleApp.Entities
                         {
                             cells.Add(Cells.At(startCell.BoardCoordinates.x, i));
                         }
-                    }else //ex: C1 -> A1
+                    }
+                    else //ex: C1 -> A1
                     {
                         for (int i = startCell.BoardCoordinates.y; i >= endCell.BoardCoordinates.y; i--)
                         {
                             cells.Add(Cells.At(startCell.BoardCoordinates.x, i));
                         }
                     }
-                }else//rows are the same
+                }
+                else//rows are the same
                 {
                     if (startCell.BoardCoordinates.x < endCell.BoardCoordinates.x) //ex: A1 -> A3
                     {
                         for (int i = startCell.BoardCoordinates.x; i <= endCell.BoardCoordinates.x; i++)
                         {
-                            cells.Add(Cells.At(i,startCell.BoardCoordinates.y));
+                            cells.Add(Cells.At(i, startCell.BoardCoordinates.y));
                         }
-                    }else //ex: A3 -> A1
+                    }
+                    else //ex: A3 -> A1
                     {
                         for (int i = startCell.BoardCoordinates.x; i >= endCell.BoardCoordinates.x; i--)
                         {
-                            cells.Add(Cells.At(i,startCell.BoardCoordinates.y));
+                            cells.Add(Cells.At(i, startCell.BoardCoordinates.y));
                         }
                     }
                 }
                 return cells;
-            }                
+            }
+            Console.WriteLine(Environment.NewLine);
             Console.WriteLine("Erreur : les coordonnées ne sont pas parallèles");
+            Console.WriteLine(Environment.NewLine);
             return null;
         }
 
@@ -73,9 +79,9 @@ namespace BatailleNavaleApp.Entities
                 if (ship.Size == cellsBetweenCoordinates.Count)
                 {
                     List<BoardCell> affectedCells = new List<BoardCell>();
-                   foreach(var cell in cellsBetweenCoordinates)
+                    foreach (var cell in cellsBetweenCoordinates)
                     {
-                        if(!cell.IsOccupied)
+                        if (!cell.IsOccupied)
                         {
                             cell.CellOccupant = ship.ShipType;
                             affectedCells.Add(cell);
@@ -83,26 +89,33 @@ namespace BatailleNavaleApp.Entities
                         else
                         {
                             Console.WriteLine("Un autre bateau est déja sur la cellule " + cell.BoardCoordinates.Coordinates);
-                            foreach(var affectedCell in affectedCells)//rollback on affected cells
+                            foreach (var affectedCell in affectedCells)//rollback on affected cells
                             {
                                 affectedCell.CellOccupant = ShipType.NONE;
                             }
                             return false;
                         }
                     }
-                   if(affectedCells.Count == ship.Size)
+                    if (affectedCells.Count == ship.Size)
                     {
                         ship.OccupedCells = affectedCells;
                         return true;
                     }
-                } else if (ship.Size > cellsBetweenCoordinates.Count)
+                }
+                else if (ship.Size > cellsBetweenCoordinates.Count)
                 {
+
+                    Console.WriteLine(Environment.NewLine);
                     Console.WriteLine("Les coordonnées entrées sont trop courtes");
-                }else
+                }
+                else
                 {
+                    Console.WriteLine(Environment.NewLine);
                     Console.WriteLine("Les coordonnées entrées sont trop longues");
                 }
             }
+
+            Console.WriteLine(Environment.NewLine);
             return false;
         }
 

@@ -1187,34 +1187,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\9704587P\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\Users\\Rémy\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\9704587P\\Source\\Repos\\BattleShipGame\\BatailleNavaleApp\\BatailleNavaleApp.csproj",
+      "projectUniqueName": "C:\\Users\\Rémy\\source\\repos\\BatailleNavaleApp\\BatailleNavaleApp\\BatailleNavaleApp.csproj",
       "projectName": "BatailleNavaleApp",
-      "projectPath": "C:\\Users\\9704587P\\Source\\Repos\\BattleShipGame\\BatailleNavaleApp\\BatailleNavaleApp.csproj",
-      "packagesPath": "C:\\Users\\9704587P\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\9704587P\\Source\\Repos\\BattleShipGame\\BatailleNavaleApp\\obj\\",
+      "projectPath": "C:\\Users\\Rémy\\source\\repos\\BatailleNavaleApp\\BatailleNavaleApp\\BatailleNavaleApp.csproj",
+      "packagesPath": "C:\\Users\\Rémy\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Rémy\\source\\repos\\BatailleNavaleApp\\BatailleNavaleApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\9704587P\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\Rémy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "http://x18srhrgcb7.st.sncf.fr:8118/nuget": {},
+        "C:\\Users\\Rémy\\.nuget\\packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BatailleNavaleApp.Contexts
 {
@@ -26,12 +25,6 @@ namespace BatailleNavaleApp.Contexts
             {
                 using var context = new BattleShipGameContext();
                 context.Database.EnsureCreated();
-                if (toSave.Id == Guid.Empty)
-                {
-                    context.BattleShipGames.Remove(toSave);
-                    context.SaveChanges();
-
-                }
                 context.BattleShipGames.Add(toSave);
                 context.SaveChanges();
                 Console.WriteLine(Environment.NewLine);
@@ -44,6 +37,23 @@ namespace BatailleNavaleApp.Contexts
             }
         }
 
+        public void UpdateGame(BattleShipGame toUpdate)
+        {
+            try
+            {
+                using var context = new BattleShipGameContext();
+                context.Database.EnsureCreated();
+                context.Update(toUpdate);
+                context.SaveChanges();
+                Console.WriteLine(Environment.NewLine);
+                Console.WriteLine("Partie sauvgardée avec succès !");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Impossible de sauvegarder la partie");
+                Console.WriteLine(e.Message);
+            }
+        }
 
 
         /// <summary>
@@ -56,10 +66,15 @@ namespace BatailleNavaleApp.Contexts
             {
                 using var context = new BattleShipGameContext();
                 context.Database.EnsureCreated();
-                return context.BattleShipGames
+                var res = context.BattleShipGames
                     .Include(bsg => bsg.Player1)
                     .Include(bsg => bsg.Player2)
                     .ToList();
+                if (res.Count == 0)
+                {
+                    Console.WriteLine("Aucune partie n'a été trouvé ");
+                }
+                return res;
             }
             catch (Exception e)
             {
@@ -68,6 +83,30 @@ namespace BatailleNavaleApp.Contexts
                 return null;
             }
         }
+
+        /// <summary>
+        /// Supprime les données
+        /// </summary>
+        /// <returns>une List<BattleShipGame> contenant tout les BattleShipGame existants</returns>
+        public bool DeleteGame(BattleShipGame toDelete)
+        {
+            try
+            {
+                using var context = new BattleShipGameContext();
+                context.Database.EnsureCreated();
+                context.Remove(toDelete);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Impossible de supprimer la partie");
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+
+
 
         /// <summary>
         /// Charge une partie spécifique grace a son Id
@@ -116,16 +155,6 @@ namespace BatailleNavaleApp.Contexts
                         .ThenInclude(ebg => ebg.Cells)
                             .ThenInclude(cell => cell.BoardCoordinates)
                     .FirstOrDefault(p => p.Id == player.Id);
-                /*foundedPlayer.EnnemyBoardGame = context.BoardGames
-                                 .Include(ebg => ebg.Cells)
-                                     .ThenInclude(cell => cell.BoardCoordinates)
-                        .FirstOrDefault(bg => bg.Id == foundedPlayer.EnnemyBoardGame.Id);
-                foundedPlayer.PersonnalBoardGame = context.BoardGames
-                                 .Include(ebg => ebg.Cells)
-                                     .ThenInclude(cell => cell.BoardCoordinates)
-                        .FirstOrDefault(bg => bg.Id == foundedPlayer.PersonnalBoardGame.Id);
-                foundedPlayer.EnnemyBoardGame = CleanBg(foundedPlayer.EnnemyBoardGame);
-                foundedPlayer.PersonnalBoardGame = CleanBg(foundedPlayer.PersonnalBoardGame);*/
                 return foundedPlayer;
             }
             catch (Exception e)
@@ -134,28 +163,6 @@ namespace BatailleNavaleApp.Contexts
                 Console.WriteLine(e.Message);
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Supprime les Cellules en trop récupérées avec les BoardGame au chargment d'une partie
-        /// </summary>
-        /// <param name="bg">BoardGame a nettoyer</param>
-        /// <returns>BoardGame nettoyée des Cells en trop</returns>
-        private BoardGame CleanBg(BoardGame bg)
-        {
-            if (bg.Cells.Count == 200)
-            {
-                List<BoardCell> tempCells = new List<BoardCell>();
-                for (int i = 0; i < 200; i++)
-                {
-                    if (bg.Cells[i].BoardCoordinates.Id != Guid.Empty)
-                    {
-                        tempCells.Add(bg.Cells[i]);
-                    }
-                }
-                bg.Cells = tempCells;
-            }
-            return bg;
         }
     }
 }
